@@ -187,7 +187,7 @@ do
 			if input == dragInput and dragging then
 				local delta = input.Position - mousePos
 				parent.Position  = UDim2.new(framePos.X.Scale, framePos.X.Offset + delta.X, framePos.Y.Scale, framePos.Y.Offset + delta.Y)
-					game:GetService("TweenService"):Create(parent, TweenInfo.new(.25), {Position = Position}):Play()
+					game:GetService("TweenService"):Create(frame, TweenInfo.new(.25), {Position = Position}):Play()
 			end
 		end)
 
