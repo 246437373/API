@@ -1,4 +1,3 @@
--- venyx ui lib reuploaded by me
 -- init
 local player = game.Players.LocalPlayer
 local mouse = player:GetMouse()
@@ -110,8 +109,8 @@ do
 		self.keybinds = {}
 		self.ended = {}
 		
-		input.InputBegan:Connect(function(key,proc)
-			if self.keybinds[key.KeyCode] and not proc then
+		input.InputBegan:Connect(function(key)
+			if self.keybinds[key.KeyCode] then
 				for i, bind in pairs(self.keybinds[key.KeyCode]) do
 					bind()
 				end
@@ -187,7 +186,7 @@ do
 		input.InputChanged:Connect(function(input)
 			if input == dragInput and dragging then
 				local delta = input.Position - mousePos
-				parent.Position  = UDim2.new(framePos.X.Scale, framePos.X.Offset + delta.X, framePos.Y.Scale, framePos.Y.Offset + delta.Y)
+				parent.Tween  = UDim2.new(framePos.X.Scale, framePos.X.Offset + delta.X, framePos.Y.Scale, framePos.Y.Offset + delta.Y)
 			end
 		end)
 
@@ -2168,4 +2167,5 @@ do
 	end
 end
 
+print("dino was here :\)")
 return library
