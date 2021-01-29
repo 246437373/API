@@ -157,48 +157,52 @@ do
 		return key
 	end
 	
-	function utility:DraggingEnabled(frame, parent)
-	
-		parent = parent or frame
-		
-		-- stolen from wally or kiriot, kek
-		local dragging = false
-		local dragInput, mousePos, framePos
+function utility:DraggingEnabled(frame, parent)
+    parent = parent or frame
 
-		frame.InputBegan:Connect(function(input)
-			if input.UserInputType == Enum.UserInputType.MouseButton1 then
-				dragging = true
-				mousePos = input.Position
-				framePos = parent.Position
-				
-				input.Changed:Connect(function()
-					if input.UserInputState == Enum.UserInputState.End then
-						dragging = false
-					end
-				end)
-			end
-		end)
+        dragToggle = nil
+        dragSpeed = .25 -- You can edit this.
+        dragInput = nil
+        dragStart = nil
+        dragPos = nil
+        
+        function updateInput(input)
+        Delta = input.Position - dragStart
+        Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + Delta.X, startPos.Y.Scale, startPos.Y.Offset + Delta.Y)
+        game:GetService("TweenService"):Create(Frame, TweenInfo.new(.25), {Position = Position}):Play()
+        end
+        
+        Frame.InputBegan:Connect(function(input)
+        if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
+        dragToggle = true
+        dragStart = input.Position
+        startPos = Frame.Position
+        input.Changed:Connect(function()
+        if (input.UserInputState == Enum.UserInputState.End) then
+        dragToggle = false
+        end
+        end)
+        end
+        end)
+        
+        Frame.InputChanged:Connect(function(input)
+        if (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+        dragInput = input
+        end
+        end)
+        
+        game:GetService("UserInputService").InputChanged:Connect(function(input)
+        if (input == dragInput and dragToggle) then
+        updateInput(input)
+        end
+        end)
+        end
 
-		frame.InputChanged:Connect(function(input)
-			if input.UserInputType == Enum.UserInputType.MouseMovement then
-				dragInput = input
-			end
-		end)
-
-		input.InputChanged:Connect(function(input)
-			if input == dragInput and dragging then
-				local delta = input.Position - mousePos
-				parent.Position  = UDim2.new(framePos.X.Scale, framePos.X.Offset + delta.X, framePos.Y.Scale, framePos.Y.Offset + delta.Y)
-			end
-		end)
-
-	end
-	
-	function utility:DraggingEnded(callback)
-		table.insert(self.ended, callback)
-	end
-	
-end
+        function utility:DraggingEnded(callback)
+            table.insert(self.ended, callback)
+        end
+        
+        end
 
 -- classes
 
