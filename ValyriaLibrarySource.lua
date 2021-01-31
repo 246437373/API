@@ -109,8 +109,8 @@ do
 		self.keybinds = {}
 		self.ended = {}
 		
-		input.InputBegan:Connect(function(key,proc)
-			if self.keybinds[key.KeyCode] and not proc then
+		input.InputBegan:Connect(function(key, istyping)
+			if self.keybinds[key.KeyCode] and not istyping then
 				for i, bind in pairs(self.keybinds[key.KeyCode]) do
 					bind()
 				end
@@ -187,7 +187,6 @@ do
 			if input == dragInput and dragging then
 				local delta = input.Position - mousePos
 				parent.Position  = UDim2.new(framePos.X.Scale, framePos.X.Offset + delta.X, framePos.Y.Scale, framePos.Y.Offset + delta.Y)
-game:GetService("TweenService"):Create(frame, TweenInfo.new(.25), {Position = Position}):Play()
 			end
 		end)
 
